@@ -683,6 +683,7 @@ public virtual class fflib_SObjectUnitOfWork
 	{
 		for (Schema.SObjectType sObjectType : m_sObjectTypes)
 		{
+            m_relationships.get(sObjectType.getDescribe().getName()).resolve();
 			m_dml.dmlUpdate(m_dirtyMapByType.get(sObjectType.getDescribe().getName()).values());
 		}
 	}
@@ -875,7 +876,10 @@ public virtual class fflib_SObjectUnitOfWork
 
         public void resolve()
         {
-            this.Record.put( this.RelatedToField, this.RelatedTo.Id);
+            //check relationship Id due to update use.
+            if (this.Record.get(this.RelatedToField) == null){
+                this.Record.put( this.RelatedToField, this.RelatedTo.Id);
+            }
         }
     }
 
